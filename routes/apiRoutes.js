@@ -1,46 +1,79 @@
-// ===============================================================================
-// LOAD DATA
-// We are linking our routes to a series of "data" sources.
-// These data sources hold arrays of information on table-data, waitinglist, etc.
-// ===============================================================================
+// declaring and defining variables/packages
 
-var db = require("../db/db");
 var fs = require("fs");
-
-// ===============================================================================
-// ROUTING
-// ===============================================================================
+// We need to include the path package to get the correct file path for our html
+var path = require("path");
+// Creating variable to hold db.json path
+const db = path.resolve(__dirname, "../db");
+// creating ID for db.json arrary
+var idCounter = 1;
 
 module.exports = function (app) {
-  // API GET Requests
-  // Below code handles when users "visit" a page.
-  // In each of the below cases when a user visits a link
-  // ---------------------------------------------------------------------------
-
+  // API GET request for the notes in db.json file
   app.get("/api/notes", function (req, res) {
-    res.json(db);
+    fs.readFile(path.resolve(db, "db.json"), "utf8", function (err, data) {
+      // responding with object data from db.json
+      res.json(JSON.parse(data));
+    });
   });
-
-  // API POST Requests
-  // ---------------------------------------------------------------------------
-
+  // API POST request for the notes in db.json file
   app.post("/api/notes", function (req, res) {
-    // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
-    // It will do this by sending out the value "true" have a table
-    // req.body is available since we're using the body parsing middleware
-    db.push(req.body);
-    res.json(true);
+    // declaring and defining an empty array
+    let notesObject = [];
+
+    //read the notes from db.json
+    let data = fs.readFileSync(path.resolve(db, "db.json"), "utf8");
+    notesObject = JSON.parse(data);
+
+    let newNoteObject = {
+      id: idCounter,
+      title: req.body.title,
+      text: req.body.text,
+    };
+    // Appending new note to the notesObject variable
+    notesObject.push(newNoteObject);
+    // Used to add the new notes to db.json file
+    fs.writeFileSync(
+      path.resolve(db, "db.json"),
+      JSON.stringify(notesObject),
+      function (err) {
+        if (err) {
+          return console.log(err);
+        }
+      }
+    );
+    // responding with the new note to the client
+    res.json(newNoteObject);
+    idCounter += 1;
   });
+  // delete requests
+  app.delete("/api/notes/:id", function (req, res) {
+    let notesObject = [];
 
-  // ---------------------------------------------------------------------------
-  // I added this below code so you could clear out the table while working with the functionality.
-  // Don"t worry about it!
+    // Used to read the notes from db.json
+    let data = fs.readFileSync(path.resolve(db, "db.json"), "utf8");
+    notesObject = JSON.parse(data);
 
-  app.post("/api/clear", function (req, res) {
-    // Empty out the arrays of data
-    tableData.length = 0;
-    waitListData.length = 0;
+    let noteIndex = 0;
+    // query parameter containing the id of a note to delete
+    for (var i = 0; i < notesObject.length; i++) {
+      if (notesObject[i].id === parseInt(req.params.id)) {
+        noteIndex = i;
+        break;
+      }
+    }
 
-    res.json({ ok: true });
+    notesObject.splice(noteIndex, 1);
+
+    fs.writeFileSync(
+      path.resolve(db, "db.json"),
+      JSON.stringify(notesObject),
+      function (err) {
+        if (err) {
+          return console.log(err);
+        }
+      }
+    );
+    res.json(true);
   });
 };
