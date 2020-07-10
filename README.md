@@ -1,27 +1,28 @@
-# Welcome to Team-Profile-Generator 👋
+# Welcome to Note Taker 👋
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
-> This project is a application that prompts users for information about team memebers and builds a html file for all team memebers with their information
 
 ### 🏠 [Homepage](https://github.com/Steve-Munoz/Note-Taker)
 
+## Summary
+
+-Note Taker creates an application that can be used to write, save, and delete notes. This app uses an express backend and saves and retrieve note data from a JSON file
 
 
-## Install
+## Prerequisites
+- NodeJs
 
+## Installation
+Clone the repository to your local development environment
 ```sh
-npm i
+https://github.com/Steve-Munoz/Note-Taker.git
 ```
+Run ```npm install``` to install all dependencies. To use the application locally, run ```node server.js``` in your CLI, and then open http://localhost:3000 in your preferred browswer. The Note Taker app is live on Heroku for you to use as well.
 
-## Usage
--Note Taker creates an application that can be used to write, save, and delete notes.
+## Deployed Link:
+-https://steve-note-taker.herokuapp.com/
 
-## Run tests
-
-```sh
-node server.js
-```
 
 ## Author
 
@@ -37,7 +38,6 @@ node server.js
 
 Contributions, issues and feature requests are welcome!
 
-Feel free to check [issues page](in the Software without restriction, including without limitation the rights). You can also take a look at the [contributing guide](SOFTWARE.).
 
 ## Show your support
 
